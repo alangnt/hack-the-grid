@@ -359,58 +359,64 @@ Devvit.addCustomPostType({
       setInitialBoard(boards[newIndex].map(row => [...row]));
       setIsValid(false);
     };
+
+    const [rulesMenu, setRulesMenu] = useState<boolean>(true);
     
     return (
-      <hstack height="100%" width="100%" gap="large" alignment="center middle">
-        <vstack gap="small">
-          {initialBoard.map((row, rowIndex) => (
-            <hstack key={`row-${rowIndex}`} gap="small">
-              {row.map((cell, colIndex) => (
-                <button
-                  width="40px"
-                  height="40px"
-                  appearance={isValid ? 'success' : undefined}
-                  disabled={originalBoard[rowIndex][colIndex] !== null}
-                  key={`cell-${rowIndex}-${colIndex}`}
-                  onPress={() => {
-                    if (isValid) return;
-                    handleClick(cell, rowIndex, colIndex);
-                  }}
-                >
-                  {cell === null ? '' : cell.toString()}
-                </button>
-              ))}
-            </hstack>
-          ))}
-        </vstack>
-        
-        <vstack>
-          <button appearance={"plain"} onPress={refreshBoard}>New Board</button>
-        </vstack>
-        
-        <vstack gap="medium">
-          <vstack>
-            <text>The grid consists of</text>
-            <text>6 columns and 6 rows</text>
+      <zstack height="100%" width="100%" gap="large" alignment="center middle">
+        <hstack gap="small" alignment="center middle">
+          <vstack gap={'medium'}>
+            <button appearance={"plain"} onPress={refreshBoard} size={'small'}>New</button>
+            <button appearance={"plain"} onPress={() => setRulesMenu(true)} size={'small'}>Rules</button>
           </vstack>
-          <vstack>
-            <text>Each row and column must</text>
-            <text>contain exactly 3 zeros (0)</text>
-            <text>and 3 ones (1)</text>
+
+          <vstack gap="small">
+            {initialBoard.map((row, rowIndex) => (
+                <hstack key={`row-${rowIndex}`} gap="small">
+                  {row.map((cell, colIndex) => (
+                      <button
+                          width="40px"
+                          height="40px"
+                          appearance={isValid ? 'success' : undefined}
+                          disabled={originalBoard[rowIndex][colIndex] !== null}
+                          key={`cell-${rowIndex}-${colIndex}`}
+                          onPress={() => {
+                            if (isValid) return;
+                            handleClick(cell, rowIndex, colIndex);
+                          }}
+                      >
+                        {cell === null ? '' : cell.toString()}
+                      </button>
+                  ))}
+                </hstack>
+            ))}
           </vstack>
-          <vstack>
-            <text>No more than two consecutive</text>
-            <text>zeros (0 0 0) or ones (1 1 1)</text>
-            <text>are allowed horizontally</text>
-            <text>or vertically</text>
+        </hstack>
+
+        {rulesMenu && (
+          <vstack height="100%" width="100%" gap="medium" backgroundColor={"white"} alignment="center middle">
+            <vstack>
+              <text alignment={"center"}>The grid consists of</text>
+              <text alignment={"center"}>6 columns and 6 rows</text>
+            </vstack>
+
+            <vstack>
+              <text alignment={"center"}>Each row and column must</text>
+              <text alignment={"center"}>contain exactly 3 zeros (0)</text>
+              <text alignment={"center"}>and 3 ones (1)</text>
+            </vstack>
+
+            <vstack>
+              <text alignment={"center"}>No more than two consecutive</text>
+              <text alignment={"center"}>zeros (0 0 0) or ones (1 1 1)</text>
+              <text alignment={"center"}>are allowed horizontally</text>
+              <text alignment={"center"}>or vertically</text>
+            </vstack>
+
+            <button onPress={() => setRulesMenu(false)}>Close</button>
           </vstack>
-          <vstack>
-            <text>The puzzle must be</text>
-            <text>solvable using logic,</text>
-            <text>no guessing required</text>
-          </vstack>
-        </vstack>
-      </hstack>
+        )}
+      </zstack>
     );
   },
 });
